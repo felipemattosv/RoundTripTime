@@ -1,8 +1,38 @@
 #include "graph.h"
 
 int main(int argc, char** argv) {
-    int v_size = 5;
-    int e_size = 9;
+    if (argc != 3) {
+        printf("usage: %s 'input.txt' 'output.txt'", argv[0]);
+        exit(0);
+    }
+
+    /*
+     * Redirect file to stdin and stdout.
+     */
+    freopen(argv[1], "r", stdin);
+    freopen(argv[2], "w", stdout);
+
+    int v_size, e_size;
+
+    /*
+     * S -> Server
+     * C -> Client
+     * M -> Monitor
+     */
+    int s, c, m;
+
+    scanf("%d %d", &v_size, &e_size);
+    scanf("%d %d %d", &s, &c, &m);
+
+    for (int i = 0; i < s; i++) {
+        scanf("%*d");
+    }
+    for (int i = 0; i < c; i++) {
+        scanf("%*d");
+    }
+    for (int i = 0; i < m; i++) {
+        scanf("%*d");
+    }
 
     Graph* graph = graph_init(v_size);
 
