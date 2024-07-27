@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "dijkstra.h"
 #include "graph.h"
 
 int main(int argc, char** argv) {
@@ -24,14 +28,18 @@ int main(int argc, char** argv) {
     scanf("%d %d", &v_size, &e_size);
     scanf("%d %d %d", &s, &c, &m);
 
+    int servers[s];
+    int clients[c];
+    int monitors[m];
+
     for (int i = 0; i < s; i++) {
-        scanf("%*d");
+        scanf("%d", &servers[i]);
     }
     for (int i = 0; i < c; i++) {
-        scanf("%*d");
+        scanf("%d", &clients[i]);
     }
     for (int i = 0; i < m; i++) {
-        scanf("%*d");
+        scanf("%d", &monitors[i]);
     }
 
     Graph* graph = graph_init(v_size);
@@ -40,9 +48,30 @@ int main(int argc, char** argv) {
         int    origin, destiny;
         Weight weight;
         scanf("%d %d %lf", &origin, &destiny, &weight);
-        Edge* edge = edge_init(origin, destiny, weight);
-        graph_add_edge(graph, edge);
+        Edge* edge = edge_init(destiny, weight);
+        graph_add_edge(graph, origin, edge);
     }
+
+    for (int i = 0; i < s; i++) {
+        Distance* d = dijkstra(graph, servers[i]);
+        for (int j = 0; j < c; j++) {
+            printf("Time %d for %d %lf\n", servers[i], clients[j],
+                   d[clients[j]]);
+        }
+    }
+    for (int i = 0; i < c; i++) {
+        Distance* d = dijkstra(graph, clients[i]);
+        for (int j = 0; j < s; j++) {
+            printf("Time %d for %d %lf\n", clients[i], servers[j],
+                   d[servers[j]]);
+        }
+    }
+
+    // Distance* dist = dijkstra(graph, 4);
+
+    // for (int i = 0; i < v_size; i++) {
+    //     printf("Distance for %d is %lf\n", i, dist[i]);
+    // }
 
     graph_show(graph);
     graph_destroy(graph);

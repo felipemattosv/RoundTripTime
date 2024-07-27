@@ -23,8 +23,10 @@ Edge*   vertex_edge_at(Vertex* v, int k);
  *  A interface para o edge
  *  Um edge tem uma origem e um destino e um peso.
  */
-Edge* edge_init(int origin, int destiny, Weight w);
-void  edge_destroy(Edge* e);
+Edge*  edge_init(int destiny, Weight w);
+int    edge_get_dest(Edge* e);
+Weight edge_get_weight(Edge* e);
+void   edge_destroy(Edge* e);
 
 /*
  *  A interface para o graph
@@ -38,7 +40,7 @@ int     graph_vertex_visited(Graph* g, int k);
 int     graph_vertex_size(Graph* g);
 void    graph_vertex_unvisit_all(Graph* g);
 void    graph_vertex_visit(Graph* g, int k);
-void    graph_add_edge(Graph* g, Edge* e);
+void    graph_add_edge(Graph* g, int origin, Edge* e);
 void    graph_show(Graph* g);
 
 #endif

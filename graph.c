@@ -10,7 +10,6 @@ struct vertex {
 };
 
 struct edge {
-    int    origin;
     int    destiny;
     Weight weight;
 };
@@ -61,14 +60,21 @@ Edge* vertex_edge_at(Vertex* v, int k) {
 
 // Edge functions:
 
-Edge* edge_init(int origin, int destiny, Weight w) {
+Edge* edge_init(int destiny, Weight w) {
     Edge* e = (Edge*)calloc(1, sizeof(Edge));
 
-    e->origin  = origin;
     e->destiny = destiny;
     e->weight  = w;
 
     return e;
+}
+
+int edge_get_dest(Edge* e) {
+    return e->destiny;
+}
+
+Weight edge_get_weight(Edge* e) {
+    return e->weight;
 }
 
 void edge_destroy(Edge* e) {
@@ -123,8 +129,8 @@ void graph_vertex_visit(Graph* g, int k) {
     g->visiteds[k] = 1;
 }
 
-void graph_add_edge(Graph* g, Edge* e) {
-    vertex_add_edge(g->vertexes[e->origin], e);
+void graph_add_edge(Graph* g, int origin, Edge* e) {
+    vertex_add_edge(g->vertexes[origin], e);
 }
 void graph_show(Graph* g) {
     for (int i = 0; i < g->v_size; i++) {
@@ -132,7 +138,7 @@ void graph_show(Graph* g) {
         int edges_size = vertex_edges_size(g->vertexes[i]);
         for (int j = 0; j < edges_size; j++) {
             Edge* e = vertex_edge_at(g->vertexes[i], j);
-            printf("  Edge %d -> %d (%lf)\n", e->origin, e->destiny, e->weight);
+            printf("  Edge %d -> %d (%lf)\n", i, e->destiny, e->weight);
         }
     }
 }
