@@ -41,5 +41,7 @@ Distance *dijkstra(Graph *g, int origin) {
         }
     }
 
+    pq_destroy(pq);
+
     return dist;
 }

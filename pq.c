@@ -37,7 +37,7 @@ PQ *pq_init(int pq_size) {
     PQ *p      = (PQ *)calloc(1, sizeof(PQ));
     p->items   = (pq_item *)malloc((pq_size + 1) * sizeof(pq_item));
     p->map     = (int *)malloc((pq_size + 1) * sizeof(int));
-    p->pq_size = pq_size;
+    p->pq_size = 0;
     return p;
 }
 

@@ -58,6 +58,7 @@ int main(int argc, char** argv) {
             printf("Time %d for %d %lf\n", servers[i], clients[j],
                    d[clients[j]]);
         }
+        distance_destroy(d);
     }
     for (int i = 0; i < c; i++) {
         Distance* d = dijkstra(graph, clients[i]);
@@ -65,13 +66,8 @@ int main(int argc, char** argv) {
             printf("Time %d for %d %lf\n", clients[i], servers[j],
                    d[servers[j]]);
         }
+        distance_destroy(d);
     }
-
-    // Distance* dist = dijkstra(graph, 4);
-
-    // for (int i = 0; i < v_size; i++) {
-    //     printf("Distance for %d is %lf\n", i, dist[i]);
-    // }
 
     graph_show(graph);
     graph_destroy(graph);
