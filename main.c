@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
     for (int i = 0; i < c; i++) {
         Distance* d = dijkstra(graph, clients[i]);
         for (int j = 0; j < s; j++) {
-            rtt[i][j] += d[servers[j]];
+            rtt[j][i] += d[servers[j]];
         }
         distance_destroy(d);
     }
