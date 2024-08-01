@@ -1,9 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "array.h"
 #include "dijkstra.h"
 #include "graph.h"
 #include "matrix.h"
+
+typedef struct {
+    int    a, b;
+    Weight w;
+} rtt_err;
+
+int rtt_cmp(const void* a, const void* b) {
+    rtt_err* aa   = (rtt_err*)a;
+    rtt_err* bb   = (rtt_err*)b;
+    Weight   diff = aa->w - bb->w;
+    if (diff > 0)
+        return 1;
+    else
+        return -1;
+}
 
 int main(int argc, char** argv) {
     if (argc != 3) {
@@ -29,9 +45,9 @@ int main(int argc, char** argv) {
     scanf("%d %d", &v_size, &e_size);
     scanf("%d %d %d", &s, &c, &m);
 
-    int servers[s];
-    int clients[c];
-    int monitors[m];
+    int* servers  = array_init(s);
+    int* clients  = array_init(c);
+    int* monitors = array_init(m);
 
     for (int i = 0; i < s; i++) {
         scanf("%d", &servers[i]);
@@ -111,6 +127,9 @@ int main(int argc, char** argv) {
         distance_destroy(d);
     }
 
+    rtt_err* err = malloc(sizeof(rtt_err) * s * c);
+
+    int count = 0;
     for (int i = 0; i < s; i++) {
         for (int j = 0; j < c; j++) {
             Weight rtt_estimated =
@@ -122,14 +141,25 @@ int main(int argc, char** argv) {
                     rtt_estimated = new_rtt;
                 }
             }
-            printf("%d %d %.10lf\n", servers[i], clients[j],
-                   rtt_estimated / rtt[i][j]);
+            err[count++] = (rtt_err){.a = servers[i],
+                                     .b = clients[j],
+                                     .w = rtt_estimated / rtt[i][j]};
         }
     }
 
+    qsort(err, s * c, sizeof(rtt_err), rtt_cmp);
+
+    for (int i = 0; i < s * c; i++) {
+        printf("%d %d %.16lf\n", err[i].a, err[i].b, err[i].w);
+    }
+
+    free(err);
     matrix_destroy(rtt, s);
     matrix_destroy(rtt_client_monitor, s);
     matrix_destroy(rtt_server_monitor, c);
+    array_destroy(servers);
+    array_destroy(clients);
+    array_destroy(monitors);
     graph_destroy(graph);
 
     return 0;
