@@ -111,20 +111,21 @@ int main(int argc, char** argv) {
         distance_destroy(d);
     }
 
-
     for (int i = 0; i < s; i++) {
         for (int j = 0; j < c; j++) {
-            Weight rtt_estimated = rtt_server_monitor[i][0] + rtt_client_monitor[0][j];
+            Weight rtt_estimated =
+                rtt_server_monitor[i][0] + rtt_client_monitor[0][j];
             for (int k = 1; k < m; k++) {
-                Weight new_rtt = rtt_server_monitor[i][k] + rtt_client_monitor[j][k];
+                Weight new_rtt =
+                    rtt_server_monitor[i][k] + rtt_client_monitor[j][k];
                 if (new_rtt < rtt_estimated) {
                     rtt_estimated = new_rtt;
                 }
             }
-            printf("%d %d %.10lf\n", servers[i], clients[j], rtt_estimated/rtt[i][j]);
+            printf("%d %d %.10lf\n", servers[i], clients[j],
+                   rtt_estimated / rtt[i][j]);
         }
     }
-
 
     matrix_destroy(rtt, s);
     matrix_destroy(rtt_client_monitor, s);
