@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
      * Redirect file to stdin and stdout.
      */
     freopen(argv[1], "r", stdin);
-    //freopen(argv[2], "w", stdout);
+    freopen(argv[2], "w", stdout);
 
     int v_size, e_size;
 
@@ -53,18 +53,20 @@ int main(int argc, char** argv) {
         graph_add_edge(graph, origin, edge);
     }
 
-    Weight **rtt = matrix_init(s, c);
-    
+    Weight** rtt                = matrix_init(s, c);
+    Weight** rtt_server_monitor = matrix_init(s, m);
+    Weight** rtt_client_monitor = matrix_init(c, m);
 
+    // S -> C
     for (int i = 0; i < s; i++) {
         Distance* d = dijkstra(graph, servers[i]);
         for (int j = 0; j < c; j++) {
             rtt[i][j] = d[clients[j]];
-
         }
         distance_destroy(d);
     }
 
+    // C -> S
     for (int i = 0; i < c; i++) {
         Distance* d = dijkstra(graph, clients[i]);
         for (int j = 0; j < s; j++) {
@@ -73,15 +75,60 @@ int main(int argc, char** argv) {
         distance_destroy(d);
     }
 
-    for (int i =0; i < s; i++) {
+    // S -> M
+    for (int i = 0; i < s; i++) {
+        Distance* d = dijkstra(graph, servers[i]);
+        for (int j = 0; j < m; j++) {
+            rtt_server_monitor[i][j] = d[monitors[j]];
+        }
+        distance_destroy(d);
+    }
+
+    // M -> S
+    for (int i = 0; i < m; i++) {
+        Distance* d = dijkstra(graph, monitors[i]);
+        for (int j = 0; j < s; j++) {
+            rtt_server_monitor[j][i] += d[servers[j]];
+        }
+        distance_destroy(d);
+    }
+
+    // C -> M
+    for (int i = 0; i < c; i++) {
+        Distance* d = dijkstra(graph, clients[i]);
+        for (int j = 0; j < m; j++) {
+            rtt_client_monitor[i][j] = d[monitors[j]];
+        }
+        distance_destroy(d);
+    }
+
+    // M -> C
+    for (int i = 0; i < m; i++) {
+        Distance* d = dijkstra(graph, monitors[i]);
         for (int j = 0; j < c; j++) {
-            printf("%d x %d =  %lf\n", servers[i], clients[j], rtt[i][j]);
+            rtt_client_monitor[j][i] += d[clients[j]];
+        }
+        distance_destroy(d);
+    }
+
+
+    for (int i = 0; i < s; i++) {
+        for (int j = 0; j < c; j++) {
+            Weight rtt_estimated = rtt_server_monitor[i][0] + rtt_client_monitor[0][j];
+            for (int k = 1; k < m; k++) {
+                Weight new_rtt = rtt_server_monitor[i][k] + rtt_client_monitor[j][k];
+                if (new_rtt < rtt_estimated) {
+                    rtt_estimated = new_rtt;
+                }
+            }
+            printf("%d %d %.10lf\n", servers[i], clients[j], rtt_estimated/rtt[i][j]);
         }
     }
 
-    matrix_destroy(rtt, s);
 
-    //graph_show(graph);
+    matrix_destroy(rtt, s);
+    matrix_destroy(rtt_client_monitor, s);
+    matrix_destroy(rtt_server_monitor, c);
     graph_destroy(graph);
 
     return 0;
