@@ -114,7 +114,7 @@ int main(int argc, char** argv) {
     for (int i = 0; i < s; i++) {
         for (int j = 0; j < c; j++) {
             Weight rtt_estimated =
-                rtt_server_monitor[i][0] + rtt_client_monitor[0][j];
+                rtt_server_monitor[i][0] + rtt_client_monitor[j][0];
             for (int k = 1; k < m; k++) {
                 Weight new_rtt =
                     rtt_server_monitor[i][k] + rtt_client_monitor[j][k];
