@@ -34,6 +34,7 @@ void   edge_destroy(Edge* e);
  *  para dizer se um vertex já foi visitado.
  */
 Graph*  graph_init(int v_size);
+void    graph_read(Graph* g, int e_size);
 void    graph_destroy(Graph* g);
 Vertex* graph_get_vertex(Graph* g, int k);
 int     graph_vertex_visited(Graph* g, int k);

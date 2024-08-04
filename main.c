@@ -35,11 +35,6 @@ int main(int argc, char** argv) {
 
     int v_size, e_size;
 
-    /*
-     * S -> Server
-     * C -> Client
-     * M -> Monitor
-     */
     int s, c, m;
 
     scanf("%d %d", &v_size, &e_size);
@@ -49,25 +44,13 @@ int main(int argc, char** argv) {
     int* clients  = array_init(c);
     int* monitors = array_init(m);
 
-    for (int i = 0; i < s; i++) {
-        scanf("%d", &servers[i]);
-    }
-    for (int i = 0; i < c; i++) {
-        scanf("%d", &clients[i]);
-    }
-    for (int i = 0; i < m; i++) {
-        scanf("%d", &monitors[i]);
-    }
+    array_read(servers, s);
+    array_read(clients, c);
+    array_read(monitors, m);
 
     Graph* graph = graph_init(v_size);
 
-    for (int i = 0; i < e_size; i++) {
-        int    origin, destiny;
-        Weight weight;
-        scanf("%d %d %lf", &origin, &destiny, &weight);
-        Edge* edge = edge_init(destiny, weight);
-        graph_add_edge(graph, origin, edge);
-    }
+    graph_read(graph, e_size);
 
     Weight** rtt                = matrix_init(s, c);
     Weight** rtt_server_monitor = matrix_init(s, m);
