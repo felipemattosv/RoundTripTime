@@ -12,6 +12,21 @@ void distance_destroy(Distance *d) {
     free(d);
 }
 
+Distance **distances_calculate(Graph *g, int *origins, int o_size) {
+    Distance **distances = (Distance **)malloc(sizeof(Distance *) * o_size);
+    for (int i = 0; i < o_size; i++) {
+        distances[i] = dijkstra(g, origins[i]);
+    }
+    return distances;
+}
+
+void distances_destroy(Distance **d, int d_size) {
+    for (int i = 0; i < d_size; i++) {
+        distance_destroy(d[i]);
+    }
+    free(d);
+}
+
 Distance *dijkstra(Graph *g, int origin) {
     Distance *dist = distance_init(graph_vertex_size(g));
 

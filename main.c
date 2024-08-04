@@ -56,59 +56,16 @@ int main(int argc, char** argv) {
     Weight** rtt_server_monitor = matrix_init(s, m);
     Weight** rtt_client_monitor = matrix_init(c, m);
 
-    // S -> C
-    for (int i = 0; i < s; i++) {
-        Distance* d = dijkstra(graph, servers[i]);
-        for (int j = 0; j < c; j++) {
-            rtt[i][j] = d[clients[j]];
-        }
-        distance_destroy(d);
-    }
+    Distance** servers_distances  = distances_calculate(graph, servers, s);
+    Distance** clients_distances  = distances_calculate(graph, clients, c);
+    Distance** monitors_distances = distances_calculate(graph, monitors, m);
 
-    // C -> S
-    for (int i = 0; i < c; i++) {
-        Distance* d = dijkstra(graph, clients[i]);
-        for (int j = 0; j < s; j++) {
-            rtt[j][i] += d[servers[j]];
-        }
-        distance_destroy(d);
-    }
-
-    // S -> M
-    for (int i = 0; i < s; i++) {
-        Distance* d = dijkstra(graph, servers[i]);
-        for (int j = 0; j < m; j++) {
-            rtt_server_monitor[i][j] = d[monitors[j]];
-        }
-        distance_destroy(d);
-    }
-
-    // M -> S
-    for (int i = 0; i < m; i++) {
-        Distance* d = dijkstra(graph, monitors[i]);
-        for (int j = 0; j < s; j++) {
-            rtt_server_monitor[j][i] += d[servers[j]];
-        }
-        distance_destroy(d);
-    }
-
-    // C -> M
-    for (int i = 0; i < c; i++) {
-        Distance* d = dijkstra(graph, clients[i]);
-        for (int j = 0; j < m; j++) {
-            rtt_client_monitor[i][j] = d[monitors[j]];
-        }
-        distance_destroy(d);
-    }
-
-    // M -> C
-    for (int i = 0; i < m; i++) {
-        Distance* d = dijkstra(graph, monitors[i]);
-        for (int j = 0; j < c; j++) {
-            rtt_client_monitor[j][i] += d[clients[j]];
-        }
-        distance_destroy(d);
-    }
+    matrix_rtt_fill(rtt, s, servers, servers_distances, c, clients,
+                    clients_distances);
+    matrix_rtt_fill(rtt_server_monitor, s, servers, servers_distances, m,
+                    monitors, monitors_distances);
+    matrix_rtt_fill(rtt_client_monitor, c, clients, clients_distances, m,
+                    monitors, monitors_distances);
 
     rtt_err* err = malloc(sizeof(rtt_err) * s * c);
 
@@ -137,6 +94,9 @@ int main(int argc, char** argv) {
     }
 
     free(err);
+    distances_destroy(servers_distances, s);
+    distances_destroy(clients_distances, c);
+    distances_destroy(monitors_distances, m);
     matrix_destroy(rtt, s);
     matrix_destroy(rtt_server_monitor, s);
     matrix_destroy(rtt_client_monitor, c);
