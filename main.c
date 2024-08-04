@@ -27,12 +27,11 @@ int main(int argc, char** argv) {
         exit(0);
     }
 
-    /*
-     * Redirect file to stdin and stdout.
-     */
+    // Redirect file to stdin and stdout.
     freopen(argv[1], "r", stdin);
     freopen(argv[2], "w", stdout);
 
+    // Read input
     int v_size, e_size;
 
     int s, c, m;
@@ -52,6 +51,7 @@ int main(int argc, char** argv) {
 
     graph_read(graph, e_size);
 
+    // Calculate RTT
     Weight** rtt                = matrix_init(s, c);
     Weight** rtt_server_monitor = matrix_init(s, m);
     Weight** rtt_client_monitor = matrix_init(c, m);
@@ -67,6 +67,7 @@ int main(int argc, char** argv) {
     matrix_rtt_fill(rtt_client_monitor, c, clients, clients_distances, m,
                     monitors, monitors_distances);
 
+    // Calculate error
     rtt_err* err = malloc(sizeof(rtt_err) * s * c);
 
     int count = 0;
@@ -87,12 +88,14 @@ int main(int argc, char** argv) {
         }
     }
 
+    // Sort and print error
     qsort(err, s * c, sizeof(rtt_err), rtt_cmp);
 
     for (int i = 0; i < s * c; i++) {
         printf("%d %d %.16lf\n", err[i].a, err[i].b, err[i].w);
     }
 
+    // Free memory
     free(err);
     distances_destroy(servers_distances, s);
     distances_destroy(clients_distances, c);
