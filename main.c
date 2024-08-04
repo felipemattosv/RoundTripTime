@@ -138,8 +138,8 @@ int main(int argc, char** argv) {
 
     free(err);
     matrix_destroy(rtt, s);
-    matrix_destroy(rtt_client_monitor, s);
-    matrix_destroy(rtt_server_monitor, c);
+    matrix_destroy(rtt_server_monitor, s);
+    matrix_destroy(rtt_client_monitor, c);
     array_destroy(servers);
     array_destroy(clients);
     array_destroy(monitors);
