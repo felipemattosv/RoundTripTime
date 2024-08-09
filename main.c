@@ -7,21 +7,6 @@
 #include "matrix.h"
 #include "rtt.h"
 
-typedef struct {
-    int    a, b;
-    Weight w;
-} rtt_err;
-
-int rtt_cmp(const void* a, const void* b) {
-    rtt_err* aa   = (rtt_err*)a;
-    rtt_err* bb   = (rtt_err*)b;
-    Weight   diff = aa->w - bb->w;
-    if (diff > 0)
-        return 1;
-    else
-        return -1;
-}
-
 int main(int argc, char** argv) {
     if (argc != 3) {
         printf("usage: %s 'input.txt' 'output.txt'\n", argv[0]);
@@ -63,10 +48,9 @@ int main(int argc, char** argv) {
     matrix_rtt_fill(rtt_client_monitor, c, clients, clients_distances, m,
                     monitors, monitors_distances);
 
-    // Calculate error
-    rtt_err* err = malloc(sizeof(rtt_err) * s * c);
+    // Calculate inflation
+    PQ* rtt_inflation = pq_init(s * c, rtt_inflation_cmp);
 
-    int count = 0;
     for (int i = 0; i < s; i++) {
         for (int j = 0; j < c; j++) {
             Weight rtt_estimated =
@@ -78,21 +62,28 @@ int main(int argc, char** argv) {
                     rtt_estimated = new_rtt;
                 }
             }
-            err[count++] = (rtt_err){.a = servers[i],
-                                     .b = clients[j],
-                                     .w = rtt_estimated / rtt[i][j]};
+
+            int    a    = servers[i];
+            int    b    = clients[j];
+            Weight time = rtt_estimated / rtt[i][j];
+
+            pq_insert(rtt_inflation, rtt_inflation_init(a, b, time));
         }
     }
 
-    // Sort and print error
-    qsort(err, s * c, sizeof(rtt_err), rtt_cmp);
+    while (!pq_empty(rtt_inflation)) {
+        RTTInflation* inflation = pq_pop_min(rtt_inflation);
 
-    for (int i = 0; i < s * c; i++) {
-        printf("%d %d %.16lf\n", err[i].a, err[i].b, err[i].w);
+        int    a    = rtt_inflation_a(inflation);
+        int    b    = rtt_inflation_b(inflation);
+        Weight time = rtt_inflation_time(inflation);
+
+        printf("%d %d %.16lf\n", a, b, time);
+        free(inflation);
     }
 
     // Free memory
-    free(err);
+    pq_destroy(rtt_inflation);
     distances_destroy(servers_distances, s);
     distances_destroy(clients_distances, c);
     distances_destroy(monitors_distances, m);
