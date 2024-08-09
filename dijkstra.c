@@ -40,11 +40,12 @@ Distance *dijkstra(Graph *g, int origin) {
     pq_insert(pq, pq_make_item(origin, 0));
 
     while (!pq_empty(pq)) {
-        pq_item U = pq_pop_min(pq);
-        Vertex *V = graph_get_vertex(g, id(U));
+        pq_item U     = pq_pop_min(pq);
+        Vertex *V     = graph_get_vertex(g, id(U));
+        List   *edges = vertex_edges(V);
 
-        for (int i = 0; i < vertex_edges_size(V); i++) {
-            Edge    *e        = vertex_edge_at(V, i);
+        for (List *i = edges; i != NULL; i = list_next(i)) {
+            Edge    *e        = list_item(i);
             Weight   cost     = edge_get_weight(e);
             int      dest     = edge_get_dest(e);
             Distance distance = dist[id(U)] + cost;

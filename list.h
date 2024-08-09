@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 typedef struct list List;
-typedef int         ListItem;
+typedef void       *ListItem;
 
 List    *list_init();
 ListItem list_item(List *l);

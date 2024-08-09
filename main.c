@@ -4,8 +4,8 @@
 #include "array.h"
 #include "dijkstra.h"
 #include "graph.h"
-#include "list.h"
 #include "matrix.h"
+#include "rtt.h"
 
 typedef struct {
     int    a, b;
