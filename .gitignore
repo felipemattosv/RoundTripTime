@@ -2,3 +2,6 @@ main
 inputs/*
 !inputs/spec
 gabaritos/*
+in
+out
+myout
