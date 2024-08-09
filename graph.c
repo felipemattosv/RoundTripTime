@@ -17,7 +17,6 @@ struct edge {
 struct graph {
     Vertex** vertexes;
     int      v_size;
-    int*     visiteds;
 };
 
 // Vertex functions:
@@ -88,7 +87,6 @@ Graph* graph_init(int v_size) {
 
     g->v_size   = v_size;
     g->vertexes = (Vertex**)malloc(v_size * sizeof(Vertex*));
-    g->visiteds = (int*)calloc(v_size, sizeof(int));
 
     for (int i = 0; i < v_size; i++) {
         g->vertexes[i] = vertex_init();
@@ -113,7 +111,6 @@ void graph_destroy(Graph* g) {
     }
 
     free(g->vertexes);
-    free(g->visiteds);
     free(g);
 }
 
@@ -121,22 +118,8 @@ Vertex* graph_get_vertex(Graph* g, int k) {
     return g->vertexes[k];
 }
 
-int graph_vertex_visited(Graph* g, int k) {
-    return g->visiteds[k];
-}
-
 int graph_vertex_size(Graph* g) {
     return g->v_size;
-}
-
-void graph_vertex_unvisit_all(Graph* g) {
-    for (int i = 0; i < g->v_size; i++) {
-        g->visiteds[i] = 0;
-    }
-}
-
-void graph_vertex_visit(Graph* g, int k) {
-    g->visiteds[k] = 1;
 }
 
 void graph_add_edge(Graph* g, int origin, Edge* e) {

@@ -37,10 +37,7 @@ Graph*  graph_init(int v_size);
 void    graph_read(Graph* g, int e_size);
 void    graph_destroy(Graph* g);
 Vertex* graph_get_vertex(Graph* g, int k);
-int     graph_vertex_visited(Graph* g, int k);
 int     graph_vertex_size(Graph* g);
-void    graph_vertex_unvisit_all(Graph* g);
-void    graph_vertex_visit(Graph* g, int k);
 void    graph_add_edge(Graph* g, int origin, Edge* e);
 void    graph_show(Graph* g);
 

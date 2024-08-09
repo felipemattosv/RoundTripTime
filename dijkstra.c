@@ -44,10 +44,9 @@ Distance *dijkstra(Graph *g, int origin) {
         Vertex *V = graph_get_vertex(g, id(U));
 
         for (int i = 0; i < vertex_edges_size(V); i++) {
-            Edge  *e    = vertex_edge_at(V, i);
-            Weight cost = edge_get_weight(e);
-            int    dest = edge_get_dest(e);
-            graph_vertex_visit(g, id(U));
+            Edge    *e        = vertex_edge_at(V, i);
+            Weight   cost     = edge_get_weight(e);
+            int      dest     = edge_get_dest(e);
             Distance distance = dist[id(U)] + cost;
             if (distance < dist[dest]) {
                 dist[dest] = distance;
