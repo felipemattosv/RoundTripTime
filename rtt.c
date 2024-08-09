@@ -33,7 +33,7 @@ int rtt_inflation_cmp(void* a, void* b) {
     return a1->time > b1->time;
 }
 
-void graph_read(Graph* g, int e_size) {
+void graph_read_edges(Graph* g, int e_size) {
     for (int i = 0; i < e_size; i++) {
         int    origin, destiny;
         Weight weight;

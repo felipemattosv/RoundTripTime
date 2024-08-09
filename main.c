@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
 
     Graph* graph = graph_init(v_size);
 
-    graph_read(graph, e_size);
+    graph_read_edges(graph, e_size);
 
     // Calculate RTT
     Weight** rtt                = matrix_init(s, c);
