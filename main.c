@@ -4,6 +4,7 @@
 #include "array.h"
 #include "dijkstra.h"
 #include "graph.h"
+#include "list.h"
 #include "matrix.h"
 
 typedef struct {
@@ -23,7 +24,7 @@ int rtt_cmp(const void* a, const void* b) {
 
 int main(int argc, char** argv) {
     if (argc != 3) {
-        printf("usage: %s 'input.txt' 'output.txt'", argv[0]);
+        printf("usage: %s 'input.txt' 'output.txt'\n", argv[0]);
         exit(0);
     }
 
