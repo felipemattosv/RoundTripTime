@@ -33,19 +33,14 @@ int main(int argc, char** argv) {
 
     // Read input
     int v_size, e_size;
-
     int s, c, m;
 
     scanf("%d %d", &v_size, &e_size);
     scanf("%d %d %d", &s, &c, &m);
 
-    int* servers  = array_init(s);
-    int* clients  = array_init(c);
-    int* monitors = array_init(m);
-
-    array_read(servers, s);
-    array_read(clients, c);
-    array_read(monitors, m);
+    int* servers  = array_read(s);
+    int* clients  = array_read(c);
+    int* monitors = array_read(m);
 
     Graph* graph = graph_init(v_size);
 
