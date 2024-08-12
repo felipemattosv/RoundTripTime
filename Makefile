@@ -1,7 +1,7 @@
-all: main
+all: trab2
 
-main: main.c
-	gcc -o main *.c
+trab2: main.c
+	gcc -o trab2 *.c
 
 clean:
-	rm -rf *.o main
+	rm -rf *.o trab2

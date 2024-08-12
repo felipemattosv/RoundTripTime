@@ -104,8 +104,8 @@ void graph_show(Graph* g) {
     for (int i = 0; i < g->v_size; i++) {
         printf("Vertex %d\n", i);
         List* edges = vertex_edges(g->vertexes[i]);
-        for (List* i = edges; i != NULL; i = list_next(i)) {
-            Edge* e = list_item(i);
+        for (List* j = edges; j != NULL; j = list_next(j)) {
+            Edge* e = list_item(j);
             printf("  Edge %d -> %d (%lf)\n", i, e->destiny, e->weight);
         }
     }
